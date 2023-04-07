@@ -1,4 +1,5 @@
-import 'package:first_app/question.dart';
+import 'package:first_app/quiz.dart';
+import 'package:first_app/result.dart';
 
 import 'package:flutter/material.dart';
 
@@ -16,11 +17,38 @@ class MyApp extends StatefulWidget {
 }
 
 class MyAppState extends State<MyApp> {
-  var questions = ['What\'s your name?', 'How old are you?'], currentQIndex = 0;
+  final questions = const [
+    {
+      'question': 'What\'s your name?',
+      'answers': [
+        {'text': 'Duc', 'score': 1},
+        {'text': 'Tu', 'score': 2},
+        {'text': 'Tam', 'score': 3},
+      ],
+    },
+    {
+      'question': 'How old are you?',
+      'answers': [
+        {'text': '20', 'score': 1},
+        {'text': '26', 'score': 2},
+        {'text': '30', 'score': 3},
+      ],
+    }
+  ];
+  int currentQIndex = 0;
+  int totalScore = 0;
 
-  void onPressBtn() {
+  void pressAnswer(int score) {
     setState(() {
-      currentQIndex = currentQIndex == 0 ? 1 : 0;
+      currentQIndex = currentQIndex + 1;
+      totalScore += score;
+    });
+  }
+
+  void pressRedoQuiz() {
+    setState(() {
+      currentQIndex = 0;
+      totalScore = 0;
     });
   }
 
@@ -29,13 +57,19 @@ class MyAppState extends State<MyApp> {
     return MaterialApp(
         home: Scaffold(
       appBar: AppBar(title: const Text('My App')),
-      body: Column(children: [
-        Question(questionText: questions[currentQIndex]),
-        ElevatedButton(
-          onPressed: onPressBtn,
-          child: const Text('Change Question'),
-        ),
-      ]),
+      body: Container(
+        padding: const EdgeInsets.all(16),
+        child: currentQIndex < questions.length
+            ? Quiz(
+                questions: questions,
+                currentQIndex: currentQIndex,
+                pressAnswer: pressAnswer,
+              )
+            : Result(
+                score: totalScore,
+                redoQuiz: pressRedoQuiz,
+              ),
+      ),
     ));
   }
 }
