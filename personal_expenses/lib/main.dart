@@ -23,7 +23,12 @@ class MyHomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Personal Expenses App')),
+      appBar: AppBar(
+        title: const Text('Personal Expenses App'),
+        actions: [
+          IconButton(onPressed: () {}, icon: const Icon(Icons.add)),
+        ],
+      ),
       body: SingleChildScrollView(
         child: Column(children: [
           Container(
@@ -34,6 +39,10 @@ class MyHomePage extends StatelessWidget {
           ),
           const UserTransactions(),
         ]),
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {},
+        child: const Icon(Icons.add),
       ),
     );
   }
