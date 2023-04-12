@@ -14,7 +14,7 @@ class TransactionItem extends StatelessWidget {
           decoration: BoxDecoration(
             border: Border.all(
               width: 2,
-              color: Colors.deepPurple,
+              color: Theme.of(context).primaryColor,
             ),
             borderRadius: const BorderRadius.all(Radius.circular(4)),
           ),
@@ -22,8 +22,8 @@ class TransactionItem extends StatelessWidget {
           padding: const EdgeInsets.all(16),
           child: Text(
             '\$${transaction.amount.toString()}',
-            style: const TextStyle(
-              color: Colors.deepPurple,
+            style: TextStyle(
+              color: Theme.of(context).primaryColor,
               fontWeight: FontWeight.bold,
               fontSize: 18,
             ),
@@ -41,10 +41,7 @@ class TransactionItem extends StatelessWidget {
                 ),
                 child: Text(
                   transaction.title,
-                  style: const TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.w700,
-                  ),
+                  style: Theme.of(context).textTheme.titleMedium,
                 ),
               ),
               Container(
@@ -54,7 +51,7 @@ class TransactionItem extends StatelessWidget {
                   right: 16,
                 ),
                 child: Text(
-                  DateFormat('dd-MM-yyyy').format(transaction.date),
+                  DateFormat('dd/MM/yyyy').format(transaction.date),
                   style: const TextStyle(fontSize: 14),
                 ),
               ),

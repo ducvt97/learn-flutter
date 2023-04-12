@@ -1,17 +1,34 @@
 import 'package:flutter/material.dart';
 
 // ignore: must_be_immutable
-class NewTransaction extends StatelessWidget {
+class NewTransaction extends StatefulWidget {
   final Function addNewTransaction;
+
+  const NewTransaction({required this.addNewTransaction, super.key});
+
+  @override
+  State<NewTransaction> createState() => _NewTransactionState();
+}
+
+class _NewTransactionState extends State<NewTransaction> {
   TextEditingController titleController = TextEditingController();
   TextEditingController amountController = TextEditingController();
-  NewTransaction({required this.addNewTransaction, super.key});
+
+  void _submitData() {
+    final title = titleController.text;
+    final amount = double.parse(amountController.text);
+
+    if (title.isNotEmpty && amount >= 0) {
+      widget.addNewTransaction(title, amount);
+    }
+    Navigator.of(context).pop();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Card(
       child: Container(
-        padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 16),
+        padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.end,
           children: [
@@ -21,16 +38,17 @@ class NewTransaction extends StatelessWidget {
             ),
             TextField(
               decoration: const InputDecoration(labelText: 'Amount'),
-              keyboardType:
-                  const TextInputType.numberWithOptions(decimal: true),
+              keyboardType: const TextInputType.numberWithOptions(
+                decimal: true,
+                signed: true,
+              ),
               controller: amountController,
             ),
             TextButton(
-              onPressed: () => addNewTransaction(
-                  titleController.text, amountController.text),
-              child: const Text(
+              onPressed: _submitData,
+              child: Text(
                 'Add Transaction',
-                style: TextStyle(color: Colors.deepPurple),
+                style: TextStyle(color: Theme.of(context).primaryColor),
               ),
             ),
           ],
