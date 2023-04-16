@@ -1,6 +1,5 @@
-import 'dart:ffi';
-
 import 'package:flutter/material.dart';
+import 'package:personal_expenses/widgets/chart.dart';
 import 'package:personal_expenses/widgets/new_transaction.dart';
 import 'package:personal_expenses/widgets/transaction_list.dart';
 
@@ -27,6 +26,21 @@ class MyApp extends StatelessWidget {
             fontSize: 18,
             fontWeight: FontWeight.bold,
           ),
+          displayMedium: TextStyle(fontSize: 16),
+        ),
+        elevatedButtonTheme: const ElevatedButtonThemeData(
+          style: ButtonStyle(
+            backgroundColor: MaterialStatePropertyAll(Colors.deepPurple),
+            foregroundColor: MaterialStatePropertyAll(Colors.white),
+          ),
+        ),
+        textButtonTheme: const TextButtonThemeData(
+          style: ButtonStyle(
+            foregroundColor: MaterialStatePropertyAll(Colors.deepPurple),
+            textStyle: MaterialStatePropertyAll(
+              TextStyle(fontWeight: FontWeight.bold),
+            ),
+          ),
         ),
       ),
     );
@@ -41,13 +55,18 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  final List<Transaction> _transactions = [];
-  void _addNewTransaction(String title, double amount) {
+  final List<Transaction> _transactions = [
+    Transaction(title: 'as', amount: 14, date: DateTime(2023, 4, 9)),
+    Transaction(title: 'as', amount: 10, date: DateTime(2023, 4, 10)),
+    Transaction(title: 'as', amount: 20, date: DateTime(2023, 4, 11)),
+    Transaction(title: 'as', amount: 5, date: DateTime(2023, 4, 12)),
+  ];
+
+  void _addNewTransaction(String title, double amount, DateTime date) {
     final newTransaction = Transaction(
-      id: DateTime.now().toString(),
       title: title,
       amount: amount,
-      date: DateTime.now(),
+      date: date,
     );
 
     setState(() {
@@ -60,6 +79,12 @@ class _MyHomePageState extends State<MyHomePage> {
       context: context,
       builder: (_) => NewTransaction(addNewTransaction: _addNewTransaction),
     );
+  }
+
+  void _deleteTransaction(int index) {
+    setState(() {
+      _transactions.removeAt(index);
+    });
   }
 
   @override
@@ -81,14 +106,15 @@ class _MyHomePageState extends State<MyHomePage> {
           children: [
             Container(
               width: double.infinity,
-              child: const Card(
-                child: Text('CHART'),
-              ),
+              child: Chart(transactions: _transactions),
             ),
             _transactions.isNotEmpty
                 ? Column(
                     children: [
-                      TransactionList(transactions: _transactions),
+                      TransactionList(
+                        transactions: _transactions,
+                        deleteTransaction: _deleteTransaction,
+                      ),
                     ],
                   )
                 : Column(

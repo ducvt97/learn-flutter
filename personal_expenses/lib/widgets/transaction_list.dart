@@ -4,7 +4,9 @@ import 'package:personal_expenses/widgets/transaction_item.dart';
 
 class TransactionList extends StatelessWidget {
   final List<Transaction> transactions;
-  const TransactionList({required this.transactions, super.key});
+  final Function deleteTransaction;
+  const TransactionList(
+      {required this.transactions, required this.deleteTransaction, super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -13,6 +15,7 @@ class TransactionList extends StatelessWidget {
       child: ListView.builder(
         itemBuilder: (context, index) => TransactionItem(
           transaction: transactions[index],
+          deleteTransaction: () => deleteTransaction(index),
         ),
         itemCount: transactions.length,
       ),

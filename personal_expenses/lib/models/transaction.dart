@@ -1,13 +1,14 @@
 class Transaction {
-  String id;
+  static int id = 0;
   String title;
   double amount;
   DateTime date;
 
   Transaction({
-    required this.id,
     required this.title,
     required this.amount,
     required this.date,
-  });
+  }) {
+    id++;
+  }
 }
