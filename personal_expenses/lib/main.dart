@@ -61,6 +61,7 @@ class _MyHomePageState extends State<MyHomePage> {
     Transaction(title: 'as', amount: 20, date: DateTime(2023, 4, 11)),
     Transaction(title: 'as', amount: 5, date: DateTime(2023, 4, 12)),
   ];
+  bool _showChart = false;
 
   void _addNewTransaction(String title, double amount, DateTime date) {
     final newTransaction = Transaction(
@@ -89,47 +90,55 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
+    final appBar = AppBar(
+      title: const Text('Personal Expenses App'),
+      actions: [
+        IconButton(
+          onPressed: () {
+            _showAddNewTransactionModal(context);
+          },
+          icon: const Icon(Icons.add),
+        ),
+      ],
+    );
+
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Personal Expenses App'),
-        actions: [
-          IconButton(
-            onPressed: () {
-              _showAddNewTransactionModal(context);
-            },
-            icon: const Icon(Icons.add),
-          ),
-        ],
-      ),
+      appBar: appBar,
       body: SingleChildScrollView(
         child: Column(
           children: [
-            Container(
-              width: double.infinity,
-              child: Chart(transactions: _transactions),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const Text('Show Chart'),
+                Switch(
+                  value: _showChart,
+                  onChanged: (value) {
+                    setState(() {
+                      _showChart = value;
+                    });
+                  },
+                ),
+              ],
             ),
-            _transactions.isNotEmpty
-                ? Column(
-                    children: [
-                      TransactionList(
-                        transactions: _transactions,
-                        deleteTransaction: _deleteTransaction,
-                      ),
-                    ],
+            _showChart
+                ? SizedBox(
+                    height: (MediaQuery.of(context).size.height -
+                            MediaQuery.of(context).padding.top -
+                            appBar.preferredSize.height) *
+                        0.7,
+                    width: double.infinity,
+                    child: Chart(transactions: _transactions),
                   )
-                : Column(
-                    children: [
-                      Text('No transaction added yet!!',
-                          style: Theme.of(context).textTheme.titleMedium),
-                      Container(
-                        margin: const EdgeInsets.only(top: 16),
-                        height: 200,
-                        child: Image.asset(
-                          'assets/images/waiting.png',
-                          fit: BoxFit.cover,
-                        ),
-                      ),
-                    ],
+                : SizedBox(
+                    height: (MediaQuery.of(context).size.height -
+                            MediaQuery.of(context).padding.top -
+                            appBar.preferredSize.height) *
+                        0.7,
+                    child: TransactionList(
+                      transactions: _transactions,
+                      deleteTransaction: _deleteTransaction,
+                    ),
                   ),
           ],
         ),

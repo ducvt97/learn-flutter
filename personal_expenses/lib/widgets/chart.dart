@@ -50,11 +50,13 @@ class Chart extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             ..._groupedAmount.map(
-              (item) => ChartBar(
-                label: item['day'],
-                amount: item['amount'],
-                percentage:
-                    _totalAmount == 0 ? 0 : item['amount'] / _totalAmount,
+              (item) => Expanded(
+                child: ChartBar(
+                  label: item['day'],
+                  amount: item['amount'],
+                  percentage:
+                      _totalAmount == 0 ? 0 : item['amount'] / _totalAmount,
+                ),
               ),
             ),
           ],
