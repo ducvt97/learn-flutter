@@ -90,6 +90,9 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
+    final bool isLandscapeMode =
+        MediaQuery.of(context).orientation == Orientation.landscape;
+
     final appBar = AppBar(
       title: const Text('Personal Expenses App'),
       actions: [
@@ -102,44 +105,51 @@ class _MyHomePageState extends State<MyHomePage> {
       ],
     );
 
+    Widget chartWidget(double percent) {
+      return SizedBox(
+        height: (MediaQuery.of(context).size.height -
+                MediaQuery.of(context).padding.top -
+                appBar.preferredSize.height) *
+            percent,
+        width: double.infinity,
+        child: Chart(transactions: _transactions),
+      );
+    }
+
+    final txList = SizedBox(
+      height: (MediaQuery.of(context).size.height -
+              MediaQuery.of(context).padding.top -
+              appBar.preferredSize.height) *
+          0.7,
+      child: TransactionList(
+        transactions: _transactions,
+        deleteTransaction: _deleteTransaction,
+      ),
+    );
+
     return Scaffold(
       appBar: appBar,
       body: SingleChildScrollView(
         child: Column(
           children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                const Text('Show Chart'),
-                Switch(
-                  value: _showChart,
-                  onChanged: (value) {
-                    setState(() {
-                      _showChart = value;
-                    });
-                  },
-                ),
-              ],
-            ),
-            _showChart
-                ? SizedBox(
-                    height: (MediaQuery.of(context).size.height -
-                            MediaQuery.of(context).padding.top -
-                            appBar.preferredSize.height) *
-                        0.7,
-                    width: double.infinity,
-                    child: Chart(transactions: _transactions),
-                  )
-                : SizedBox(
-                    height: (MediaQuery.of(context).size.height -
-                            MediaQuery.of(context).padding.top -
-                            appBar.preferredSize.height) *
-                        0.7,
-                    child: TransactionList(
-                      transactions: _transactions,
-                      deleteTransaction: _deleteTransaction,
-                    ),
+            if (isLandscapeMode)
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Text('Show Chart'),
+                  Switch(
+                    value: _showChart,
+                    onChanged: (value) {
+                      setState(() {
+                        _showChart = value;
+                      });
+                    },
                   ),
+                ],
+              ),
+            if (!isLandscapeMode) chartWidget(0.3),
+            if (!isLandscapeMode) txList,
+            if (isLandscapeMode) _showChart ? chartWidget(0.7) : txList,
           ],
         ),
       ),

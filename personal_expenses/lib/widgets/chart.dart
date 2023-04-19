@@ -49,16 +49,16 @@ class Chart extends StatelessWidget {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            ..._groupedAmount.map(
-              (item) => Expanded(
-                child: ChartBar(
-                  label: item['day'],
-                  amount: item['amount'],
-                  percentage:
-                      _totalAmount == 0 ? 0 : item['amount'] / _totalAmount,
+            ..._groupedAmount.reversed.toList().map(
+                  (item) => Expanded(
+                    child: ChartBar(
+                      label: item['day'],
+                      amount: item['amount'],
+                      percentage:
+                          _totalAmount == 0 ? 0 : item['amount'] / _totalAmount,
+                    ),
+                  ),
                 ),
-              ),
-            ),
           ],
         ),
       ),
