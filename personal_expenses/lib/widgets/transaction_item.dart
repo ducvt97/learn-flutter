@@ -35,10 +35,20 @@ class TransactionItem extends StatelessWidget {
           DateFormat('dd/MM/yyyy').format(transaction.date),
           style: const TextStyle(fontSize: 14),
         ),
-        trailing: IconButton(
-          onPressed: deleteTransaction,
-          icon: const Icon(Icons.delete),
-        ),
+        trailing: MediaQuery.of(context).size.width > 460
+            ? TextButton.icon(
+                style: TextButton.styleFrom(
+                  foregroundColor: Theme.of(context).colorScheme.error,
+                ),
+                onPressed: deleteTransaction,
+                icon: const Icon(Icons.delete),
+                label: const Text('Delete'),
+              )
+            : IconButton(
+                onPressed: deleteTransaction,
+                icon: const Icon(Icons.delete),
+                color: Theme.of(context).colorScheme.error,
+              ),
       ),
     );
   }

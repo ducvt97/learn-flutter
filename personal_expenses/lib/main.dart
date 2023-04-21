@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:personal_expenses/widgets/chart.dart';
 import 'package:personal_expenses/widgets/new_transaction.dart';
@@ -90,8 +92,9 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
+    final mediaQuery = MediaQuery.of(context);
     final bool isLandscapeMode =
-        MediaQuery.of(context).orientation == Orientation.landscape;
+        mediaQuery.orientation == Orientation.landscape;
 
     final appBar = AppBar(
       title: const Text('Personal Expenses App'),
@@ -107,8 +110,8 @@ class _MyHomePageState extends State<MyHomePage> {
 
     Widget chartWidget(double percent) {
       return SizedBox(
-        height: (MediaQuery.of(context).size.height -
-                MediaQuery.of(context).padding.top -
+        height: (mediaQuery.size.height - // device height
+                mediaQuery.padding.top - // top bar
                 appBar.preferredSize.height) *
             percent,
         width: double.infinity,
@@ -117,8 +120,8 @@ class _MyHomePageState extends State<MyHomePage> {
     }
 
     final txList = SizedBox(
-      height: (MediaQuery.of(context).size.height -
-              MediaQuery.of(context).padding.top -
+      height: (mediaQuery.size.height -
+              mediaQuery.padding.top -
               appBar.preferredSize.height) *
           0.7,
       child: TransactionList(
@@ -137,7 +140,8 @@ class _MyHomePageState extends State<MyHomePage> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   const Text('Show Chart'),
-                  Switch(
+                  Switch.adaptive(
+                    activeColor: Theme.of(context).primaryColor,
                     value: _showChart,
                     onChanged: (value) {
                       setState(() {
@@ -153,12 +157,14 @@ class _MyHomePageState extends State<MyHomePage> {
           ],
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          _showAddNewTransactionModal(context);
-        },
-        child: const Icon(Icons.add),
-      ),
+      floatingActionButton: Platform.isIOS
+          ? null
+          : FloatingActionButton(
+              onPressed: () {
+                _showAddNewTransactionModal(context);
+              },
+              child: const Icon(Icons.add),
+            ),
     );
   }
 }

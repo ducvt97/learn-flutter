@@ -51,7 +51,8 @@ class _NewTransactionState extends State<NewTransaction> {
             top: 8,
             left: 16,
             right: 16,
-            bottom: MediaQuery.of(context).viewInsets.bottom + 8,
+            bottom: MediaQuery.of(context).viewInsets.bottom +
+                8, // calculate size of the keyboard
           ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.end,
