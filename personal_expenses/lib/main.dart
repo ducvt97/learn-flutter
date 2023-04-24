@@ -130,30 +130,41 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
     );
 
+    List<Widget> buildLandscapeContent() {
+      return [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const Text('Show Chart'),
+            Switch.adaptive(
+              activeColor: Theme.of(context).primaryColor,
+              value: _showChart,
+              onChanged: (value) {
+                setState(() {
+                  _showChart = value;
+                });
+              },
+            ),
+          ],
+        ),
+        _showChart ? chartWidget(0.7) : txList,
+      ];
+    }
+
+    List<Widget> buildPortraitContent() {
+      return [
+        chartWidget(0.3),
+        txList,
+      ];
+    }
+
     return Scaffold(
       appBar: appBar,
       body: SingleChildScrollView(
         child: Column(
           children: [
-            if (isLandscapeMode)
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  const Text('Show Chart'),
-                  Switch.adaptive(
-                    activeColor: Theme.of(context).primaryColor,
-                    value: _showChart,
-                    onChanged: (value) {
-                      setState(() {
-                        _showChart = value;
-                      });
-                    },
-                  ),
-                ],
-              ),
-            if (!isLandscapeMode) chartWidget(0.3),
-            if (!isLandscapeMode) txList,
-            if (isLandscapeMode) _showChart ? chartWidget(0.7) : txList,
+            if (isLandscapeMode) ...buildLandscapeContent(),
+            if (!isLandscapeMode) ...buildPortraitContent(),
           ],
         ),
       ),
