@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
+import 'package:provider/provider.dart';
+import 'package:shop_app/providers/products_provider.dart';
 
 class UserProductItem extends StatelessWidget {
   final String id;
@@ -27,14 +29,45 @@ class UserProductItem extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             children: [
               IconButton(
-                onPressed: () {},
+                onPressed: () {
+                  Navigator.of(context).pushNamed(
+                    '/add-edit-product',
+                    arguments: id,
+                  );
+                },
                 icon: Icon(
                   Icons.edit,
                   color: Theme.of(context).colorScheme.primary,
                 ),
               ),
               IconButton(
-                onPressed: () {},
+                onPressed: () {
+                  showDialog(
+                    context: context,
+                    builder: (context) => AlertDialog(
+                      content:
+                          const Text('Do you want to delete this product?'),
+                      actions: [
+                        TextButton(
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                          },
+                          child: const Text('Cancel'),
+                        ),
+                        TextButton(
+                          onPressed: () {
+                            Provider.of<ProductsProvider>(
+                              context,
+                              listen: false,
+                            ).deleteProduct(id);
+                            Navigator.of(context).pop();
+                          },
+                          child: const Text('Delete'),
+                        ),
+                      ],
+                    ),
+                  );
+                },
                 icon: Icon(
                   Icons.delete,
                   color: Theme.of(context).colorScheme.error,

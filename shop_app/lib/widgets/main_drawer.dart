@@ -34,7 +34,7 @@ class MainDrawer extends StatelessWidget {
         ),
         itemBuilder(context, 'Shop', Icons.home, '/'),
         itemBuilder(context, 'Orders', Icons.shop, '/orders'),
-        itemBuilder(context, 'User Products', Icons.shop, '/user-products'),
+        itemBuilder(context, 'User Products', Icons.edit, '/user-products'),
       ],
     );
   }
