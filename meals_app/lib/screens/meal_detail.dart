@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:meals_app/dummy_data.dart';
+import 'package:meals_app/providers/favorites_provider.dart';
 
-class MealDetail extends StatelessWidget {
+class MealDetail extends ConsumerWidget {
   const MealDetail({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final _favoritesProvider = ref.watch(favoritesProvider);
     final id = ModalRoute.of(context)!.settings.arguments as String;
     final selectedMeal = DUMMY_MEALS.firstWhere((element) => element.id == id);
 
@@ -74,6 +77,18 @@ class MealDetail extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text(selectedMeal.title),
+        actions: [
+          IconButton(
+            onPressed: () {
+              ref
+                  .read(favoritesProvider.notifier)
+                  .toggleFavoriteMeal(selectedMeal);
+            },
+            icon: _favoritesProvider.contains(selectedMeal)
+                ? const Icon(Icons.favorite)
+                : const Icon(Icons.favorite_outline),
+          ),
+        ],
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.only(bottom: 16),

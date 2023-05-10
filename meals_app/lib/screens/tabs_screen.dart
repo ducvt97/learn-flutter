@@ -1,16 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:meals_app/screens/categories_screen.dart';
 import 'package:meals_app/screens/favorties_screen.dart';
 import 'package:meals_app/widgets/main_drawer.dart';
 
-class TabsScreen extends StatefulWidget {
+class TabsScreen extends ConsumerStatefulWidget {
   const TabsScreen({super.key});
 
   @override
-  State<TabsScreen> createState() => _TabsScreenState();
+  ConsumerState<TabsScreen> createState() => _TabsScreenState();
 }
 
-class _TabsScreenState extends State<TabsScreen> {
+class _TabsScreenState extends ConsumerState<TabsScreen> {
   int _currentTabIndex = 0;
   final _tabs = [
     {'title': 'Categories', 'widget': const CategoriesScreen()},
@@ -36,11 +37,11 @@ class _TabsScreenState extends State<TabsScreen> {
         items: [
           BottomNavigationBarItem(
             icon: const Icon(Icons.category),
-            label: _tabs[_currentTabIndex]['title'] as String,
+            label: _tabs[0]['title'] as String,
           ),
           BottomNavigationBarItem(
             icon: const Icon(Icons.star),
-            label: _tabs[_currentTabIndex]['title'] as String,
+            label: _tabs[1]['title'] as String,
           ),
         ],
       ),
