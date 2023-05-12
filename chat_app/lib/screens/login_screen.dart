@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -8,7 +9,34 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  var isSignIn = true;
+  var _isSignIn = true;
+  final _form = GlobalKey<FormState>();
+  late String _email;
+  late String _password;
+
+  void _submit() async {
+    final isValidate = _form.currentState!.validate();
+    if (isValidate) {
+      _form.currentState!.save();
+
+      try {
+        if (_isSignIn) {
+          final userCredentials = await FirebaseAuth.instance
+              .signInWithEmailAndPassword(email: _email, password: _password);
+        } else {
+          final userCredentials = await FirebaseAuth.instance
+              .createUserWithEmailAndPassword(
+                  email: _email, password: _password);
+        }
+      } on FirebaseAuthException catch (error) {
+        ScaffoldMessenger.of(context).clearSnackBars();
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(error.message ?? 'Authentication failed')),
+        );
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -32,16 +60,26 @@ class _LoginScreenState extends State<LoginScreen> {
                 child: Padding(
                   padding: const EdgeInsets.all(16),
                   child: Form(
+                    key: _form,
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         TextFormField(
                           decoration: const InputDecoration(
-                            labelText: 'Username',
+                            labelText: 'Email',
                           ),
                           autocorrect: false,
                           keyboardType: TextInputType.emailAddress,
                           textCapitalization: TextCapitalization.none,
+                          validator: (value) {
+                            if (value == null ||
+                                value.trim().isEmpty ||
+                                !value.contains('@')) {
+                              return 'Please enter valid email.';
+                            }
+                            return null;
+                          },
+                          onSaved: (newValue) => _email = newValue!,
                         ),
                         const SizedBox(height: 4),
                         TextFormField(
@@ -49,14 +87,21 @@ class _LoginScreenState extends State<LoginScreen> {
                             labelText: 'Password',
                           ),
                           obscureText: true,
+                          validator: (value) {
+                            if (value == null || value.trim().length < 6) {
+                              return 'Password must at least 6 characters long.';
+                            }
+                            return null;
+                          },
+                          onSaved: (newValue) => _password = newValue!,
                         ),
                         const SizedBox(height: 8),
                         SizedBox(
                           width: double.infinity,
                           child: ElevatedButton(
-                            onPressed: () {},
+                            onPressed: _submit,
                             child:
-                                Text(isSignIn ? 'Sign In' : 'Create Account'),
+                                Text(_isSignIn ? 'Sign In' : 'Create Account'),
                           ),
                         ),
                         SizedBox(
@@ -64,10 +109,10 @@ class _LoginScreenState extends State<LoginScreen> {
                           child: TextButton(
                             onPressed: () {
                               setState(() {
-                                isSignIn = !isSignIn;
+                                _isSignIn = !_isSignIn;
                               });
                             },
-                            child: Text(isSignIn
+                            child: Text(_isSignIn
                                 ? 'Already have an account? Sign in now.'
                                 : 'Don\'t have an account? Create one.'),
                           ),
