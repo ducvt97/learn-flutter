@@ -38,6 +38,11 @@ dependencies:
   google_fonts: ^4.0.4
   uuid: ^3.0.7
   flutter_riverpod: ^2.3.6
+  image_picker: ^0.8.7+5
+  location: ^4.4.0
+  path: ^1.8.2
+  path_provider: ^2.0.15
+  sqflite: ^2.2.8+2
 
 dev_dependencies:
   flutter_test:
